@@ -22,6 +22,9 @@ inputs:
         number: the number of widgets that are not collapsible. If negative, the card is not collapsible.
     required: false
     default: '-1'
+  artifactUrl: 
+    description: 'URL for download artifact'
+    required: true
 
 branding:
   icon: 'bell'
