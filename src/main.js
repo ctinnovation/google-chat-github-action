@@ -166,7 +166,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
           },
           {
             decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/donload.png' },
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/download.png' },
               topLabel: 'Download',
               text: artifactUrl,
               button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
