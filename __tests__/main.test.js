@@ -34,6 +34,7 @@ describe('action', () => {
     mockData.issueNumber = 'test issue number';
     mockData.workflow = 'test workflow';
     mockData.actor = 'jchrist';
+    mockData.artifactUrl = 'https://api.dev.ctinnovation.it/artifacts/download/?k=theater-unity3d/DEV/662d1ca/theater-6.4.0-2504.zip';
     setupGithubContext();
   });
 
@@ -44,7 +45,7 @@ describe('action', () => {
   it('reads and debugs inputs', async () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(input => {
-      if (['name', 'url', 'status'].includes(input)) {
+      if (['name', 'url', 'status', 'artifactUrl'].includes(input)) {
         return input;
       }
       return '';
@@ -54,7 +55,7 @@ describe('action', () => {
     expect(runMock).toHaveReturned();
 
     // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenCalledWith('input params: name=name, status=status, url=url, collapse=-1');
+    expect(debugMock).toHaveBeenCalledWith('input params: name=name, status=status, url=url, collapse=-1, artifactUrl=artifactUrl');
   });
 
   it('sets a failed status', async () => {
@@ -90,7 +91,7 @@ describe('action', () => {
     it('reads and converts custom collapse', async () => {
       // Set the action's inputs as return values from core.getInput()
       getInputMock.mockImplementation(input => {
-        if (['name', 'url', 'status'].includes(input)) {
+        if (['name', 'url', 'status', 'artifactUrl'].includes(input)) {
           return input;
         }
         if (input === 'collapse') {
@@ -103,13 +104,13 @@ describe('action', () => {
       expect(runMock).toHaveReturned();
 
       // Verify that all of the core library functions were called correctly
-      expect(debugMock).toHaveBeenCalledWith('input params: name=name, status=status, url=url, collapse=5');
+      expect(debugMock).toHaveBeenCalledWith('input params: name=name, status=status, url=url, collapse=5, artifactUrl=artifactUrl');
     });
 
     it('reads and converts invalid collapse', async () => {
       // Set the action's inputs as return values from core.getInput()
       getInputMock.mockImplementation(input => {
-        if (['name', 'url', 'status'].includes(input)) {
+        if (['name', 'url', 'status', 'artifactUrl'].includes(input)) {
           return input;
         }
         if (input === 'collapse') {
@@ -122,7 +123,7 @@ describe('action', () => {
       expect(runMock).toHaveReturned();
 
       // Verify that all of the core library functions were called correctly
-      expect(debugMock).toHaveBeenCalledWith('input params: name=name, status=status, url=url, collapse=-1');
+      expect(debugMock).toHaveBeenCalledWith('input params: name=name, status=status, url=url, collapse=-1, artifactUrl=artifactUrl');
     });
   });
 

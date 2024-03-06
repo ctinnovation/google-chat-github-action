@@ -34,10 +34,11 @@ async function run() {
         collapse = defaultCollapse;
       }
     }
+    const artifactUrl = core.getInput('artifactUrl', { required: true });
 
-    core.debug(`input params: name=${name}, status=${status}, url=${url}, collapse=${collapse}`);
+    core.debug(`input params: name=${name}, status=${status}, url=${url}, collapse=${collapse}, artifactUrl=${artifactUrl}`);
 
-    const ok = await sendNotification(name, url, status, collapse);
+    const ok = await sendNotification(name, url, status, collapse, artifactUrl);
     if (!ok) {
       core.setFailed('error sending notification to google chat');
     } else {
@@ -48,12 +49,12 @@ async function run() {
   }
 }
 
-async function sendNotification(name, url, status, collapse) {
+async function sendNotification(name, url, status, collapse, artifactUrl) {
   const { owner, repo } = github.context.repo;
   const { eventName, sha, ref, actor, workflow } = github.context;
   const { number } = github.context.issue;
 
-  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse });
+  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl });
   const body = createBody(name, card);
 
   try {
@@ -66,7 +67,7 @@ async function sendNotification(name, url, status, collapse) {
   }
 }
 
-function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse }) {
+function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl }) {
   const statusLower = status.toLowerCase();
   let statusColor;
   const statusName = status.substring(0, 1).toUpperCase() + status.substring(1);
@@ -120,7 +121,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
         widgets: [
           {
             decoratedText: {
-              icon: { iconUrl: `https://raw.githubusercontent.com/JChrist/google-chat-github-action/main/assets/status_${statusType}.png` },
+              icon: { iconUrl: `https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/status_${statusType}.png` },
               topLabel: 'Status',
               text: `<font color="${statusColor}">${statusName}</font>`,
               button: { text: 'Open Checks', onClick: { openLink: { url: checksUrl } } }
@@ -128,7 +129,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
           },
           {
             decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/JChrist/google-chat-github-action/main/assets/repo.png' },
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/repo.png' },
               topLabel: 'Repository',
               text: `${owner}/${repo}`,
               button: { text: 'Open Repository', onClick: { openLink: { url: repoUrl } } }
@@ -136,7 +137,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
           },
           {
             decoratedText: {
-              icon: { iconUrl: `https://raw.githubusercontent.com/JChrist/google-chat-github-action/main/assets/event_${eventType}.png` },
+              icon: { iconUrl: `https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/event_${eventType}.png` },
               topLabel: 'Event',
               text: eventNameFmt,
               button: { text: 'Open Event', onClick: { openLink: { url: eventUrl } } }
@@ -144,23 +145,31 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
           },
           {
             decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/JChrist/google-chat-github-action/main/assets/ref.png' },
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/ref.png' },
               topLabel: 'Ref',
               text: ref
             }
           },
           {
             decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/JChrist/google-chat-github-action/main/assets/event_workflow_dispatch.png' },
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/event_workflow_dispatch.png' },
               topLabel: 'Workflow',
               text: workflow
             }
           },
           {
             decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/JChrist/google-chat-github-action/main/assets/actor.png' },
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/actor.png' },
               topLabel: 'Actor',
               text: actor
+            }
+          },
+          {
+            decoratedText: {
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/donload.png' },
+              topLabel: 'Download',
+              text: artifactUrl,
+              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
             }
           },
           ...nameWidgets
