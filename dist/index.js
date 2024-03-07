@@ -32586,10 +32586,10 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
           },
           {
             decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/download.png' },
-              topLabel: 'Download',
-              text: 'click to download',
-              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/jira.png' },
+              topLabel: 'Jira',
+              text: 'KALI-2343',
+              button: { text: 'Download', onClick: { openLink: { url: 'https://ctinnovation.atlassian.net/browse/KALI-7207' } } }
             }
           },
           ...nameWidgets
