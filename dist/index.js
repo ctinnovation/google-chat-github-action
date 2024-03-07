@@ -32446,7 +32446,7 @@ async function run() {
         collapse = defaultCollapse;
       }
     }
-    const artifactUrl = core.getInput('Artifacturl', { required: true });
+    const artifactUrl = core.getInput('artifactUrl', { required: true });
 
     core.debug(`input params: name=${name}, status=${status}, url=${url}, collapse=${collapse}, artifactUrl=${artifactUrl}`);
 
@@ -32578,9 +32578,18 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
           },
           {
             decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/donload.png' },
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/download.png' },
               topLabel: 'Download',
-              text: artifactUrl
+              text: 'click to download',
+              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
+            }
+          },
+          {
+            decoratedText: {
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/jira.png' },
+              topLabel: 'Jira',
+              text: 'KALI-2343',
+              button: { text: 'Download', onClick: { openLink: { url: 'https://ctinnovation.atlassian.net/browse/KALI-7207' } } }
             }
           },
           ...nameWidgets
@@ -32592,6 +32601,16 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
 
 function createBody(name, card) {
   return { text: '', cardsV2: [{ cardId: name, card: { name, ...card } }] };
+}
+
+function createJiraLink(branchName, boardName, atlassianDomain) {
+  const regex = new RegExp(`${boardName}-\\d+`, 'gi');
+  const result = regex.exec(branchName);
+  if (!result) {
+    return undefined;
+  }
+
+  return `${atlassianDomain}/${result[0]}`;
 }
 
 // exports
