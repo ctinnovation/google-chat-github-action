@@ -35,10 +35,12 @@ async function run() {
       }
     }
     const artifactUrl = core.getInput('artifactUrl', { required: true });
+    const boardName = core.getInput('jiraBoardName');
+    const atlassianDomain = core.getInput('atlassianDomain');
 
     core.debug(`input params: name=${name}, status=${status}, url=${url}, collapse=${collapse}, artifactUrl=${artifactUrl}`);
 
-    const ok = await sendNotification(name, url, status, collapse, artifactUrl);
+    const ok = await sendNotification(name, url, status, collapse, artifactUrl, boardName, atlassianDomain);
     if (!ok) {
       core.setFailed('error sending notification to google chat');
     } else {
@@ -49,12 +51,14 @@ async function run() {
   }
 }
 
-async function sendNotification(name, url, status, collapse, artifactUrl) {
+async function sendNotification(name, url, status, collapse, artifactUrl, boardName, atlassianDomain) {
   const { owner, repo } = github.context.repo;
-  const { eventName, sha, ref, actor, workflow } = github.context;
+  const { eventName, sha, ref, actor, workflow, runNumber } = github.context;
   const { number } = github.context.issue;
 
-  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl });
+  const jiraIssueLink = createJiraLink(name, boardName, atlassianDomain);
+
+  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssueLink });
   const body = createBody(name, card);
 
   try {
@@ -67,7 +71,7 @@ async function sendNotification(name, url, status, collapse, artifactUrl) {
   }
 }
 
-function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl }) {
+function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssueLink }) {
   const statusLower = status.toLowerCase();
   let statusColor;
   const statusName = status.substring(0, 1).toUpperCase() + status.substring(1);
@@ -107,6 +111,18 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
       }
     });
   }
+
+  const jiraWidgets = [];
+  if (jiraIssueLink) {
+    jiraWidgets.push({
+      decoratedText: {
+        icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/jira.png' },
+        topLabel: 'Jira issue',
+        text: jiraIssueLink,
+        button: { text: 'Open', onClick: { openLink: { url: jiraIssueLink } } }
+      }
+    });
+  }
   return {
     header: {
       title: name,
@@ -124,7 +140,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
               icon: { iconUrl: `https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/status_${statusType}.png` },
               topLabel: 'Status',
               text: `<font color="${statusColor}">${statusName}</font>`,
-              button: { text: 'Open Checks', onClick: { openLink: { url: checksUrl } } }
+              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
             }
           },
           {
@@ -154,7 +170,8 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
             decoratedText: {
               icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/event_workflow_dispatch.png' },
               topLabel: 'Workflow',
-              text: workflow
+              text: `workflow #${runNumber}`,
+              button: { text: 'Open Checks', onClick: { openLink: { url: checksUrl } } }
             }
           },
           {
@@ -164,22 +181,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
               text: actor
             }
           },
-          {
-            decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/download.png' },
-              topLabel: 'Download',
-              text: 'click to download',
-              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
-            }
-          },
-          {
-            decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/jira.png' },
-              topLabel: 'Jira',
-              text: 'KALI-2343',
-              button: { text: 'Download', onClick: { openLink: { url: 'https://ctinnovation.atlassian.net/browse/KALI-7207' } } }
-            }
-          },
+          ...jiraWidgets,
           ...nameWidgets
         ]
       }
@@ -192,13 +194,16 @@ function createBody(name, card) {
 }
 
 function createJiraLink(branchName, boardName, atlassianDomain) {
+  core.debug(`createJiraLink input params: branchName=${branchName}, boardName=${boardName}, atlassianDomain=${atlassianDomain}`);
+
   const regex = new RegExp(`${boardName}-\\d+`, 'gi');
   const result = regex.exec(branchName);
   if (!result) {
     return undefined;
   }
+  core.debug(`createJiraLink: result=${result}`);
 
-  return `${atlassianDomain}/${result[0]}`;
+  return `${atlassianDomain}/browse/${result[0]}`;
 }
 
 // exports

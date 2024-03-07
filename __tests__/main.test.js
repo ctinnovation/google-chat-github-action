@@ -29,12 +29,15 @@ describe('action', () => {
     mockData.owner = 'jchrist';
     mockData.repo = 'google-chat-github-action';
     mockData.eventName = 'pull_request';
-    mockData.ref = 'refs/heads/main';
+    mockData.ref = 'refs/heads/feat/LEAR-20/test-description';
     mockData.sha = '123abc';
     mockData.issueNumber = 'test issue number';
     mockData.workflow = 'test workflow';
     mockData.actor = 'jchrist';
     mockData.artifactUrl = 'https://api.dev.ctinnovation.it/artifacts/download/?k=theater-unity3d/DEV/662d1ca/theater-6.4.0-2504.zip';
+    mockData.jiraBoardName = 'LEAR';
+    mockData.atlassianDomain = 'https://ctinnovation.atlassian.net';
+
     setupGithubContext();
   });
 
@@ -393,6 +396,24 @@ describe('action', () => {
     expect(nameWidget.wrapText).toBeTruthy();
   });
 
+  it('check Jira issue link', async () => {
+    getInputMock.mockImplementation(input => (input === 'status' ? 'Success' : input));
+    const capture = [];
+    axiosMock.mockImplementation((url, body) => {
+      capture.push({ url, body });
+      return { status: 200, data: 'ok' };
+    });
+    await main.run();
+    expect(runMock).toHaveReturned();
+
+    expect(axiosMock).toHaveBeenCalled();
+    expect(capture).toHaveLength(1);
+
+    console.debug(capture[0].body.cardsV2);
+    const jiraIssueLink = getjiraIssueLinkt(getCardFromBody(capture[0].body)).text;
+    expect(jiraIssueLink).toContain('ff');
+  });
+
   function setupGithubContext() {
     Object.defineProperty(github, 'context', {
       value: {
@@ -445,5 +466,9 @@ describe('action', () => {
 
   function getActorWidget(card) {
     return getCardWidget(card, 5);
+  }
+
+  function getjiraIssueLinkt(card) {
+    return getCardWidget(card, 7);
   }
 });
