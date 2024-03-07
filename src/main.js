@@ -201,11 +201,14 @@ function createBody(name, card) {
 }
 
 function createJiraLink(branchName, boardName, atlassianDomain) {
+  core.debug(`createJiraLink input params: branchName=${branchName}, boardName=${boardName}, atlassianDomain=${atlassianDomain}`);
+
   const regex = new RegExp(`${boardName}-\\d+`, 'gi');
   const result = regex.exec(branchName);
   if (!result) {
     return undefined;
   }
+  core.debug(`createJiraLink: result=${result}`);
 
   return `${atlassianDomain}/browse/${result[0]}`;
 }
