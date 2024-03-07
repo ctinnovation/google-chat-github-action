@@ -35,7 +35,7 @@ async function run() {
       }
     }
     const artifactUrl = core.getInput('artifactUrl', { required: true });
-    const boardName = core.getInput('boardName');
+    const boardName = core.getInput('jiraBoardName');
     const atlassianDomain = core.getInput('atlassianDomain');
 
     core.debug(`input params: name=${name}, status=${status}, url=${url}, collapse=${collapse}, artifactUrl=${artifactUrl}`);
