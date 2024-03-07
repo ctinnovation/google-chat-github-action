@@ -32468,9 +32468,9 @@ async function sendNotification(name, url, status, collapse, artifactUrl, boardN
   const { eventName, sha, ref, actor, workflow, runNumber } = github.context;
   const { number } = github.context.issue;
 
-  const jiraIssue = createJiraLink(ref, boardName, atlassianDomain);
+  const jiraIssueLink = createJiraLink(ref, boardName, atlassianDomain);
 
-  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssue });
+  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssueLink });
   const body = createBody(name, card);
 
   try {
@@ -32483,7 +32483,7 @@ async function sendNotification(name, url, status, collapse, artifactUrl, boardN
   }
 }
 
-function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssue }) {
+function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssueLink }) {
   const statusLower = status.toLowerCase();
   let statusColor;
   const statusName = status.substring(0, 1).toUpperCase() + status.substring(1);
@@ -32525,13 +32525,13 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
   }
 
   const jiraWidgets = [];
-  if (jiraIssue) {
+  if (jiraIssueLink) {
     jiraWidgets.push({
       decoratedText: {
         icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/jira.png' },
-        topLabel: 'Jira',
-        text: jiraIssue,
-        button: { text: 'Download', onClick: { openLink: { url: `https://ctinnovation.atlassian.net/browse/${jiraIssue}` } } }
+        topLabel: 'Jira issue',
+        text: jiraIssueLink,
+        button: { text: 'Open', onClick: { openLink: { url: jiraIssueLink } } }
       }
     });
   }
@@ -32619,7 +32619,7 @@ function createJiraLink(branchName, boardName, atlassianDomain) {
     return undefined;
   }
 
-  return `${atlassianDomain}/${result[0]}`;
+  return `${atlassianDomain}/${boardName}${result[0]}`;
 }
 
 // exports
