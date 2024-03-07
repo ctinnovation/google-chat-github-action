@@ -25,6 +25,14 @@ inputs:
   artifactUrl: 
     description: 'URL for download artifact'
     required: true
+  jiraBoardName: 
+    description: 'Name of Jira board'
+    required: false
+    default: ''
+  atlassianDomain: 
+    description: 'Atlassina domain URL'
+    required: false
+    default: ''
 
 branding:
   icon: 'bell'

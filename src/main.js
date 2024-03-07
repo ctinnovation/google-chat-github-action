@@ -35,10 +35,12 @@ async function run() {
       }
     }
     const artifactUrl = core.getInput('artifactUrl', { required: true });
+    const boardName = core.getInput('boardName');
+    const atlassianDomain = core.getInput('atlassianDomain');
 
     core.debug(`input params: name=${name}, status=${status}, url=${url}, collapse=${collapse}, artifactUrl=${artifactUrl}`);
 
-    const ok = await sendNotification(name, url, status, collapse, artifactUrl);
+    const ok = await sendNotification(name, url, status, collapse, artifactUrl, boardName, atlassianDomain);
     if (!ok) {
       core.setFailed('error sending notification to google chat');
     } else {
@@ -49,12 +51,14 @@ async function run() {
   }
 }
 
-async function sendNotification(name, url, status, collapse, artifactUrl) {
+async function sendNotification(name, url, status, collapse, artifactUrl, boardName, atlassianDomain) {
   const { owner, repo } = github.context.repo;
   const { eventName, sha, ref, actor, workflow, runNumber } = github.context;
   const { number } = github.context.issue;
 
-  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber });
+  const jiraIssue = createJiraLink(ref, boardName, atlassianDomain);
+
+  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssue });
   const body = createBody(name, card);
 
   try {
@@ -67,7 +71,7 @@ async function sendNotification(name, url, status, collapse, artifactUrl) {
   }
 }
 
-function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber }) {
+function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssue }) {
   const statusLower = status.toLowerCase();
   let statusColor;
   const statusName = status.substring(0, 1).toUpperCase() + status.substring(1);
@@ -104,6 +108,18 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
         topLabel: 'Name',
         text: name,
         wrapText: true
+      }
+    });
+  }
+
+  const jiraWidgets = [];
+  if (jiraIssue) {
+    jiraWidgets.push({
+      decoratedText: {
+        icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/jira.png' },
+        topLabel: 'Jira',
+        text: jiraIssue,
+        button: { text: 'Download', onClick: { openLink: { url: `https://ctinnovation.atlassian.net/browse/${jiraIssue}` } } }
       }
     });
   }
@@ -172,14 +188,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
               button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
             }
           },
-          {
-            decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/jira.png' },
-              topLabel: 'Jira',
-              text: 'KALI-2343',
-              button: { text: 'Download', onClick: { openLink: { url: 'https://ctinnovation.atlassian.net/browse/KALI-7207' } } }
-            }
-          },
+          ...jiraWidgets,
           ...nameWidgets
         ]
       }
