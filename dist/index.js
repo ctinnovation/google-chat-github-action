@@ -32619,7 +32619,7 @@ function createJiraLink(branchName, boardName, atlassianDomain) {
     return undefined;
   }
 
-  return `${atlassianDomain}/${boardName}${result[0]}`;
+  return `${atlassianDomain}/${result[0]}`;
 }
 
 // exports
