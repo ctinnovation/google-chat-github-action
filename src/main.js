@@ -56,7 +56,7 @@ async function sendNotification(name, url, status, collapse, artifactUrl, boardN
   const { eventName, sha, ref, actor, workflow, runNumber } = github.context;
   const { number } = github.context.issue;
 
-  const jiraIssueLink = createJiraLink(ref, boardName, atlassianDomain);
+  const jiraIssueLink = createJiraLink(name, boardName, atlassianDomain);
 
   const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber, jiraIssueLink });
   const body = createBody(name, card);
@@ -207,7 +207,7 @@ function createJiraLink(branchName, boardName, atlassianDomain) {
     return undefined;
   }
 
-  return `${atlassianDomain}/${result[0]}`;
+  return `${atlassianDomain}/browse/${result[0]}`;
 }
 
 // exports
