@@ -51,10 +51,10 @@ async function run() {
 
 async function sendNotification(name, url, status, collapse, artifactUrl) {
   const { owner, repo } = github.context.repo;
-  const { eventName, sha, ref, actor, workflow } = github.context;
+  const { eventName, sha, ref, actor, workflow, runNumber } = github.context;
   const { number } = github.context.issue;
 
-  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl });
+  const card = createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber });
   const body = createBody(name, card);
 
   try {
@@ -67,7 +67,7 @@ async function sendNotification(name, url, status, collapse, artifactUrl) {
   }
 }
 
-function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl }) {
+function createCard({ name, status, owner, repo, eventName, ref, actor, workflow, sha, number, collapse, artifactUrl, runNumber }) {
   const statusLower = status.toLowerCase();
   let statusColor;
   const statusName = status.substring(0, 1).toUpperCase() + status.substring(1);
@@ -154,7 +154,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
             decoratedText: {
               icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/event_workflow_dispatch.png' },
               topLabel: 'Workflow',
-              text: workflow
+              text: `workflow #${runNumber}`
             }
           },
           {
