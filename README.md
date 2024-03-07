@@ -58,6 +58,14 @@ Expanded:
     #  `number`: the number of widgets that are not collapsible. If negative, the card is not collapsible.
     # Optional
     collapse: 1
+    # Artifact URL
+    artifactUrl: URL for download artifact
+    # Jira board name
+    # Default to empty
+    jiraBoardName: Name of Jira board
+    # Atlassian Domain
+    # Default to empty
+    atlassianDomain: URL of your Atlassian domain
   if: always()
   # this allows the build to succeed even when the notification fails
   # e.g. due to dependabot push, which may not have the secret
