@@ -32584,6 +32584,14 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
               button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
             }
           },
+          {
+            decoratedText: {
+              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/download.png' },
+              topLabel: 'Download',
+              text: 'click to download',
+              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
+            }
+          },
           ...nameWidgets
         ]
       }
@@ -32593,6 +32601,16 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
 
 function createBody(name, card) {
   return { text: '', cardsV2: [{ cardId: name, card: { name, ...card } }] };
+}
+
+function createJiraLink(branchName, boardName, atlassianDomain) {
+  const regex = new RegExp(`${boardName}-\\d+`, 'gi');
+  const result = regex.exec(branchName);
+  if (!result) {
+    return undefined;
+  }
+
+  return `${atlassianDomain}/${result[0]}`;
 }
 
 // exports
