@@ -140,7 +140,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
               icon: { iconUrl: `https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/status_${statusType}.png` },
               topLabel: 'Status',
               text: `<font color="${statusColor}">${statusName}</font>`,
-              button: { text: 'Open Checks', onClick: { openLink: { url: checksUrl } } }
+              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
             }
           },
           {
@@ -170,7 +170,8 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
             decoratedText: {
               icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/event_workflow_dispatch.png' },
               topLabel: 'Workflow',
-              text: `workflow #${runNumber}`
+              text: `workflow #${runNumber}`,
+              button: { text: 'Open Checks', onClick: { openLink: { url: checksUrl } } }
             }
           },
           {
@@ -178,14 +179,6 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
               icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/actor.png' },
               topLabel: 'Actor',
               text: actor
-            }
-          },
-          {
-            decoratedText: {
-              icon: { iconUrl: 'https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/download.png' },
-              topLabel: 'Download',
-              text: 'click to download',
-              button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
             }
           },
           ...jiraWidgets,
