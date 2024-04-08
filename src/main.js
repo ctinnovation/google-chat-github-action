@@ -139,7 +139,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
             decoratedText: {
               icon: { iconUrl: `https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/status_${statusType}.png` },
               topLabel: 'Status',
-              text: `<font color="${statusColor}">${statusName}</font>`,
+              text: `<font color="${statusColor}">${statusName}</font> - <a href="${artifactUrl}">link</a>`,
               button: { text: 'Download', onClick: { openLink: { url: artifactUrl } } }
             }
           },
