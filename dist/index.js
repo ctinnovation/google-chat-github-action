@@ -32538,7 +32538,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
   return {
     header: {
       title: name,
-      subtitle: `${owner}/${repo}`,
+      subtitle: `${owner}/${repo} #${runNumber}`,
       imageUrl: 'https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png',
       imageType: 'CIRCLE'
     },
