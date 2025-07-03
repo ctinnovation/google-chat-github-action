@@ -1,0 +1,23 @@
+name: Local Test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test Action
+        uses: ./ # path locale all’action
+        with:
+          name: "test name"
+          url: "${{ secrets.TEAMS_WEBHOOK_URL }}"
+          status: "success"
+          artifactUrl: "https://example.com/artifact.zip"
+          jiraBoardName: KALI
+          atlassianDomain: https://ctinnovation.atlassian.net
+          collapse: 1
+          
