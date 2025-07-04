@@ -31320,7 +31320,8 @@ var __webpack_exports__ = {};
 /**
  * The entrypoint for the action.
  */
-// const { run } = require('./main');
+
+// const { run } = require('./googlechat');
 const { run } = __nccwpck_require__(5711);
 
 run();
