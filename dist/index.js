@@ -29032,57 +29032,6 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
 
     }
 
-
-
-    // const payload = JSON.stringify({
-    //   type: "message",
-    //   attachments: [
-    //     {
-    //       contentType: "application/vnd.microsoft.card.adaptive",
-    //       content: {
-    //         $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
-    //         type: "AdaptiveCard",
-    //         version: "1.4",
-    //         body: [
-    //           {
-    //             type: "TextBlock",
-    //             text: `${emoji} Build Notification`,
-    //             weight: "Bolder",
-    //             size: "Medium"
-    //           },
-    //           {
-    //             type: "FactSet",
-    //             facts: [
-    //               { title: "Progetto:", value: project },
-    //               { title: "Branch:", value: branch },
-    //               { title: "Stato:", value: `${emoji} ${status}` }
-    //             ]
-    //           },
-    //           {
-    //             type: "TextBlock",
-    //             text: "📎 Artifact URL:",
-    //             weight: "Bolder",
-    //             spacing: "Medium"
-    //           },
-    //           {
-    //             type: "TextBlock",
-    //             text: artifactUrl,
-    //             wrap: true,
-    //             selectable: true
-    //           }
-    //         ],
-    //         actions: [
-    //           {
-    //             type: "Action.OpenUrl",
-    //             title: "🔗 Apri Artifact",
-    //             url: artifactUrl
-    //           }
-    //         ]
-    //       }
-    //     }
-    //   ]
-    // });
-
     const eventType = events[(eventName || '').toLowerCase()] || events.push;
     let eventNameFmt;
     if (eventType === events.pull_request) {
@@ -29123,7 +29072,7 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
                         "items": [
                             {
                                 "type": "Image",
-                                "url": "https://github.githubassets.com/assets/github.svg",
+                                "url": "https://raw.githubusercontent.com/ctinnovation/google-chat-github-action/main/assets/GitHub-Logo.png",
                                 "width": "50px"
                             }
                         ],
