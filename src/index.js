@@ -1,6 +1,8 @@
 /**
  * The entrypoint for the action.
  */
-const { run } = require('./main');
+
+// const { run } = require('./googlechat');
+const { run } = require('./teams');
 
 run();

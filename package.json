@@ -6,11 +6,26 @@
   "private": true,
   "license": "MIT",
   "homepage": "https://github.com/jchrist/google-chat-github-action#readme",
-  "repository": {"type": "git", "url": "git+https://github.com/jchrist/google-chat-github-action.git"},
-  "bugs": {"url": "https://github.com/jchrist/google-chat-github-action/issues"},
-  "keywords": ["GitHub", "Actions", "Google", "Chat", "notification"],
-  "exports": {".": "./dist/index.js"},
-  "engines": {"node": ">=20"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jchrist/google-chat-github-action.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jchrist/google-chat-github-action/issues"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "Google",
+    "Chat",
+    "notification"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "bundle": "npm run format:write && npm run package",
     "ci-test": "jest",
@@ -32,7 +47,7 @@
     "@babel/core": "^7.23.9",
     "@babel/eslint-parser": "^7.23.10",
     "@babel/preset-env": "^7.23.9",
-    "@vercel/ncc": "^0.38.1",
+    "@vercel/ncc": "^0.38.3",
     "babel-preset-jest": "^29.6.3",
     "eslint": "^8.57.0",
     "eslint-plugin-github": "^4.10.1",
@@ -42,16 +57,31 @@
     "prettier": "^3.2.5",
     "svgexport": "^0.4.2"
   },
-  "eslintConfig": {"extends": "./.github/linters/.eslintrc.yml"},
+  "eslintConfig": {
+    "extends": "./.github/linters/.eslintrc.yml"
+  },
   "jest": {
     "verbose": true,
     "clearMocks": true,
     "testEnvironment": "node",
-    "moduleFileExtensions": ["js"],
-    "testMatch": ["**/*.test.js"],
-    "testPathIgnorePatterns": ["/node_modules/", "/dist/"],
-    "coverageReporters": ["json-summary", "text", "lcov"],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "coverageReporters": [
+      "json-summary",
+      "text",
+      "lcov"
+    ],
     "collectCoverage": true,
-    "collectCoverageFrom": ["./src/**"]
+    "collectCoverageFrom": [
+      "./src/**"
+    ]
   }
 }
