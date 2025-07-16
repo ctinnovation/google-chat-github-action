@@ -29346,7 +29346,27 @@ function createCard({ name, status, owner, repo, eventName, ref, actor, workflow
                                 ]
                             }
                         ]
-                    }]
+                    },
+                    {
+                        "type": "ColumnSet",
+                        "columns": [
+                            {
+                                "type": "Column",
+                                "width": "stretch",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": `${artifactUrl}`,
+                                        "wrap": true,
+                                        "size": "Small",
+                                        "isSubtle": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+
+                ]
             },
             {
                 "type": "Container",
