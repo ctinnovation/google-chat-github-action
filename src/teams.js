@@ -58,6 +58,7 @@ async function sendNotification(name, webhookUrl, status, artifactUrl, boardName
 
     const url = new URL(webhookUrl);
     try {
+        core.debug(`before call webhook`)
         const req = https.request(
             {
                 hostname: url.hostname,
@@ -81,6 +82,7 @@ async function sendNotification(name, webhookUrl, status, artifactUrl, boardName
 
         req.write(payload);
         req.end();
+        core.debug(`end call webhook`)
         return true;
     } catch (err) {
         core.setFailed(`Unexpected error: ${err.message}`);
