@@ -1,8 +1,8 @@
-
-
+const https = require('https');
+const agent = new https.Agent({ keepAlive: false });
 const github = require('@actions/github');
 const core = require('@actions/core');
-const https = require('https');
+const axios = require('axios');
 const { URL } = require('url');
 
 const colors = {
@@ -26,14 +26,10 @@ async function run() {
         const boardName = core.getInput('jiraBoardName');
         const atlassianDomain = core.getInput('atlassianDomain');
 
-
-
-
-
-
         core.debug(`input params: name=${name}, status=${status}, webhookUrl=${webhookUrl}, artifactUrl=${artifactUrl}`);
 
         const ok = await sendNotification(name, webhookUrl, status, artifactUrl, boardName, atlassianDomain);
+
         if (!ok) {
             core.setFailed('error sending notification to google chat');
         } else {
@@ -43,6 +39,7 @@ async function run() {
     } catch (error) {
         core.setFailed(error.message);
     }
+
 }
 
 async function sendNotification(name, webhookUrl, status, artifactUrl, boardName, atlassianDomain) {
@@ -58,32 +55,16 @@ async function sendNotification(name, webhookUrl, status, artifactUrl, boardName
 
     const url = new URL(webhookUrl);
     try {
-        const req = https.request(
-            {
-                hostname: url.hostname,
-                path: url.pathname + url.search,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Content-Length': payload.length
-                }
-            },
-            res => {
-                if (res.statusCode < 200 || res.statusCode >= 300) {
-                    core.setFailed(`HTTP ${res.statusCode}`);
-                }
-            }
-        );
-
-        req.on('error', error => {
-            core.setFailed(error.message);
+        core.debug(`before call webhook`)
+        const response = await axios.post(url, payload, {
+            headers: { 'Content-Type': 'application/json', 'Content-Length': payload.length },
+            httpsAgent: agent 
         });
-
-        req.write(payload);
-        req.end();
+        core.debug(`request success with status: ${response.status}`);
         return true;
     } catch (err) {
         core.setFailed(`Unexpected error: ${err.message}`);
+        core.debug(`request failed with error, body: ${JSON.stringify(payload)}, response:${JSON.stringify(err.response?.data || '')}`);
         return false;
     }
 }

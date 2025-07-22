@@ -62,6 +62,7 @@ async function sendNotification(name, url, status, collapse, artifactUrl, boardN
   const body = createBody(name, card);
 
   try {
+    core.debug(`before call webhook`)
     const response = await axios.post(url, body);
     core.debug(`request success with status: ${response.status}`);
     return true;
