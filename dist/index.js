@@ -32410,8 +32410,6 @@ function wrappy (fn, cb) {
 /***/ 5711:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-
-const process = __nccwpck_require__(932);
 const https = __nccwpck_require__(5692);
 const agent = new https.Agent({ keepAlive: false });
 const github = __nccwpck_require__(3228);
@@ -32447,10 +32445,7 @@ async function run() {
         if (!ok) {
             core.setFailed('error sending notification to google chat');
         } else {
-            core.debug(`XSent notification: ${name}, ${status}`);
-            // setImmediate(() => process.exit(0)); // uscita forzata
-            // return;
-            console.log(process._getActiveHandles());
+            core.debug(`Sent notification: ${name}, ${status}`);
         }
 
     } catch (error) {
@@ -32479,31 +32474,6 @@ async function sendNotification(name, webhookUrl, status, artifactUrl, boardName
         });
         core.debug(`request success with status: ${response.status}`);
         return true;
-        // const req = https.request(
-        //     {
-        //         hostname: url.hostname,
-        //         path: url.pathname + url.search,
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Content-Length': payload.length
-        //         }
-        //     },
-        //     res => {
-        //         if (res.statusCode < 200 || res.statusCode >= 300) {
-        //             core.setFailed(`HTTP ${res.statusCode}`);
-        //         }
-        //     }
-        // );
-
-        // req.on('error', error => {
-        //     core.setFailed(error.message);
-        // });
-
-        // req.write(payload);
-        // req.end();
-        // core.debug(`end call webhook`)
-        // return true;
     } catch (err) {
         core.setFailed(`Unexpected error: ${err.message}`);
         core.debug(`request failed with error, body: ${JSON.stringify(payload)}, response:${JSON.stringify(err.response?.data || '')}`);
@@ -33034,14 +33004,6 @@ module.exports = require("path");
 
 "use strict";
 module.exports = require("perf_hooks");
-
-/***/ }),
-
-/***/ 932:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("process");
 
 /***/ }),
 
