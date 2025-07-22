@@ -32,7 +32,7 @@ async function run() {
         if (!ok) {
             core.setFailed('error sending notification to google chat');
         } else {
-            core.debug(`Sent notification: ${name}, ${status}`);
+            core.debug(`XSent notification: ${name}, ${status}`);
             setImmediate(() => process.exit(0)); // uscita forzata
             return;
         }
