@@ -28940,23 +28940,21 @@ async function run() {
         const boardName = core.getInput('jiraBoardName');
         const atlassianDomain = core.getInput('atlassianDomain');
 
-
-
-
-
-
         core.debug(`input params: name=${name}, status=${status}, webhookUrl=${webhookUrl}, artifactUrl=${artifactUrl}`);
 
         const ok = await sendNotification(name, webhookUrl, status, artifactUrl, boardName, atlassianDomain);
         if (!ok) {
             core.setFailed('error sending notification to google chat');
         } else {
-            core.debug(`Sent notification: ${name}, ${status}`);
+            core.debug(`XSent notification: ${name}, ${status}`);
+            setImmediate(() => process.exit(0)); // uscita forzata
+            return;
         }
 
     } catch (error) {
         core.setFailed(error.message);
     }
+
 }
 
 async function sendNotification(name, webhookUrl, status, artifactUrl, boardName, atlassianDomain) {
@@ -28972,6 +28970,7 @@ async function sendNotification(name, webhookUrl, status, artifactUrl, boardName
 
     const url = new URL(webhookUrl);
     try {
+        core.debug(`before call webhook`)
         const req = https.request(
             {
                 hostname: url.hostname,
@@ -28995,6 +28994,7 @@ async function sendNotification(name, webhookUrl, status, artifactUrl, boardName
 
         req.write(payload);
         req.end();
+        core.debug(`end call webhook`)
         return true;
     } catch (err) {
         core.setFailed(`Unexpected error: ${err.message}`);
