@@ -26,11 +26,6 @@ async function run() {
         const boardName = core.getInput('jiraBoardName');
         const atlassianDomain = core.getInput('atlassianDomain');
 
-
-
-
-
-
         core.debug(`input params: name=${name}, status=${status}, webhookUrl=${webhookUrl}, artifactUrl=${artifactUrl}`);
 
         const ok = await sendNotification(name, webhookUrl, status, artifactUrl, boardName, atlassianDomain);
@@ -38,11 +33,14 @@ async function run() {
             core.setFailed('error sending notification to google chat');
         } else {
             core.debug(`Sent notification: ${name}, ${status}`);
+            setImmediate(() => process.exit(0)); // uscita forzata
+            return;
         }
 
     } catch (error) {
         core.setFailed(error.message);
     }
+
 }
 
 async function sendNotification(name, webhookUrl, status, artifactUrl, boardName, atlassianDomain) {
